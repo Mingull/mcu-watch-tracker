@@ -165,7 +165,17 @@ function App() {
 	}
 
 	function updateMovieProgress(id: string, position: number, duration: number) {
-		update(id, (saved) => ({ ...saved, progress: { position, duration, updatedAt: new Date().toISOString() } }));
+		update(id, (saved) => {
+			const next = { ...saved };
+			if (position <= 0 || position >= duration) {
+				delete next.progress;
+				if (position >= duration) next.watched = true;
+			} else {
+				next.watched = false;
+				next.progress = { position, duration, updatedAt: new Date().toISOString() };
+			}
+			return next;
+		});
 	}
 	function toggleEp(e: SeasonEntry, index: number, watched: boolean) {
 		update(getEntryId(e), (saved) => {
@@ -176,13 +186,20 @@ function App() {
 	}
 
 	function updateEpisodeProgress(id: string, episodeIndex: number, position: number, duration: number) {
-		update(id, (saved) => ({
-			...saved,
-			episodeProgress: {
-				...saved.episodeProgress,
-				[episodeIndex]: { position, duration, updatedAt: new Date().toISOString() },
-			},
-		}));
+		update(id, (saved) => {
+			const episodeProgress = { ...saved.episodeProgress };
+			const episodes = [...saved.episodes];
+			if (position <= 0 || position >= duration) {
+				delete episodeProgress[episodeIndex];
+				if (position >= duration) episodes[episodeIndex] = true;
+			} else {
+				episodes[episodeIndex] = false;
+				episodeProgress[episodeIndex] = { position, duration, updatedAt: new Date().toISOString() };
+			}
+			const next: Saved = { ...saved, episodes, episodeProgress };
+			if (Object.keys(episodeProgress).length === 0) delete next.episodeProgress;
+			return next;
+		});
 	}
 
 	function markAll(e: SeasonEntry, watched: boolean) {

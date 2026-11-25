@@ -150,7 +150,14 @@ export function EntryDetailsDialog({ entry, saved, onOpenChange, onToggleWatched
 															{episode.note && <span className="text-muted-foreground text-xs italic">{episode.note}</span>}
 														</div>
 
-														<Button size="sm" variant="ghost" onClick={() => onSetProgress(index)}>
+														<Button
+															size="sm"
+															variant="ghost"
+															onClick={(event) => {
+																event.stopPropagation();
+																onSetProgress(index);
+															}}
+														>
 															<Clock3 data-icon="inline-start" />
 															{episodeProgress ? "Edit" : "Position"}
 														</Button>
