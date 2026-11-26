@@ -144,14 +144,14 @@ Pin interaction states with a `data-preview` attribute. Override the hover, focu
 
 ```css
 @custom-variant hover {
-	@media (hover: hover) {
-		&:hover {
-			@slot;
-		}
-	}
-	&[data-preview~="hover"] {
-		@slot;
-	}
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &[data-preview~="hover"] {
+    @slot;
+  }
 }
 @custom-variant focus-visible (&:focus-visible, &[data-preview~="focus"]);
 @custom-variant active (&:active, &[data-preview~="active"]);
@@ -178,9 +178,15 @@ The columns are default, hover, focus, active and disabled. Add `loading` with S
 
 ```tsx
 <StateMatrix
-	rows={["input"] as const}
-	states={["default", "hover", "focus", "disabled", "invalid"]}
-	render={(_, state) => <Input placeholder="you@company.com" aria-invalid={state === "invalid" || undefined} {...previewState(state)} />}
+  rows={["input"] as const}
+  states={["default", "hover", "focus", "disabled", "invalid"]}
+  render={(_, state) => (
+    <Input
+      placeholder="you@company.com"
+      aria-invalid={state === "invalid" || undefined}
+      {...previewState(state)}
+    />
+  )}
 />
 ```
 
@@ -211,14 +217,14 @@ Pick the two to four DESIGN.md rules that are easiest to break and render each a
 
 ```tsx
 <div className="grid gap-4 md:grid-cols-2">
-	<Example title="Do">
-		<Button>Get started</Button>
-		<Button variant="outline">Contact sales</Button>
-	</Example>
-	<Example title="Don't">
-		<Button>Get started</Button>
-		<Button>Contact sales</Button>
-	</Example>
+  <Example title="Do">
+    <Button>Get started</Button>
+    <Button variant="outline">Contact sales</Button>
+  </Example>
+  <Example title="Don't">
+    <Button>Get started</Button>
+    <Button>Contact sales</Button>
+  </Example>
 </div>
 ```
 

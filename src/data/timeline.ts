@@ -700,7 +700,7 @@ export const timeline: Entry[] = [
 			{ episode: 3, title: "Rabbit in a Snowstorm", duration: "54m" },
 			{ episode: 4, title: "In the Blood", duration: "54m" },
 			{ episode: 5, title: "World on Fire", duration: "57m" },
-			{ episode: 6, title: "Condemned", duration: "50m" },
+			{ episode: 6, title: "Condemned", duration: "49m 30s" },
 			{ episode: 7, title: "Stick", duration: "52m" },
 			{ episode: 8, title: "Shadows in the Glass", duration: "55m" },
 			{ episode: 9, title: "Speak of the Devil", duration: "59m" },

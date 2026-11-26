@@ -5,19 +5,22 @@
       "source": "vercel-labs/skills",
       "sourceType": "github",
       "skillPath": "skills/find-skills/SKILL.md",
-      "computedHash": ""
+      "computedHash": "7bc223e2aafbdbf6e50ea243ba6ef67fe432bb069ab439fea0390795dac0bf7f",
+      "commit": "57217cf86ba38148a57af9e90d14a4c049558330"
     },
     "pick-ui-library": {
       "source": "emilkowalski/skills",
       "sourceType": "github",
       "skillPath": "skills/pick-ui-library/SKILL.md",
-      "computedHash": "c5d418c22e298c1c85856dc838190ec366782c0b476752dfae71d32ae8342cd5"
+      "computedHash": "3bc44e7faccb949583f4af6c8a15b5a50acc04a5e656f5168a96e5aa43e9f3cd",
+      "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c"
     },
     "shadcn": {
       "source": "shadcn/ui",
       "sourceType": "github",
       "skillPath": "skills/shadcn/SKILL.md",
-      "computedHash": ""
+      "computedHash": "388962d16c7a4f13aaeee0d8f128e50a87df8553d42ef7988c39c0e1c74a40e8",
+      "commit": "0e5b2e621a9ee4cf6a604bbe6c5c0d5b70561eb4"
     }
   }
 }

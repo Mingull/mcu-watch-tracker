@@ -19,27 +19,41 @@ export type ProgressDialogProps = {
 	onSave: (position: number, duration: number) => void;
 };
 
-function parseTime(value: string) {
-	const match = /^(\d+):([0-5]\d):([0-5]\d)$/.exec(value);
-	return match ? Number(match[1]) * 3600 + Number(match[2]) * 60 + Number(match[3]) : NaN;
+function formatPlaybackTime(seconds: number, includeHours: boolean) {
+	const formatted = formatTime(seconds);
+	if (includeHours) return formatted;
+
+	return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${formatted.slice(-2)}`;
+}
+
+function parseTime(value: string, includeHours: boolean) {
+	if (includeHours) {
+		const match = /^(\d+):([0-5]\d):([0-5]\d)$/.exec(value);
+		return match ? Number(match[1]) * 3600 + Number(match[2]) * 60 + Number(match[3]) : NaN;
+	}
+
+	const match = /^([0-5]\d):([0-5]\d)$/.exec(value);
+	return match ? Number(match[1]) * 60 + Number(match[2]) : NaN;
 }
 
 export function PlaybackProgressDialog({ open, title, progress, defaultDuration, onOpenChange, onSave }: ProgressDialogProps) {
 	const duration = defaultDuration || progress?.duration || 0;
+	const safeDuration = Math.max(duration, 0);
+	const includeHours = safeDuration >= 3600;
+	const timeFormat = includeHours ? "HH:MM:SS" : "MM:SS";
 
 	const [position, setPosition] = useState(progress?.position ?? 0);
-	const [positionInput, setPositionInput] = useState(formatTime(progress?.position ?? 0));
+	const [positionInput, setPositionInput] = useState(formatPlaybackTime(progress?.position ?? 0, includeHours));
 
 	useEffect(() => {
 		if (open) {
 			setPosition(progress?.position ?? 0);
-			setPositionInput(formatTime(progress?.position ?? 0));
+			setPositionInput(formatPlaybackTime(progress?.position ?? 0, includeHours));
 		}
-	}, [open, progress]);
+	}, [open, progress, includeHours]);
 
-	const safeDuration = Math.max(duration, 0);
 	const safePosition = Math.min(Math.max(position, 0), safeDuration);
-	const inputSeconds = parseTime(positionInput);
+	const inputSeconds = parseTime(positionInput, includeHours);
 	const isValidInput = Number.isSafeInteger(inputSeconds) && inputSeconds <= safeDuration;
 
 	function save() {
@@ -61,7 +75,7 @@ export function PlaybackProgressDialog({ open, title, progress, defaultDuration,
 					<label className="flex flex-col gap-3">
 						<div className="flex items-center justify-between">
 							<span className="text-sm font-medium">Playback position</span>
-							<span className="text-sm font-semibold tabular-nums">{formatTime(safePosition)}</span>
+							<span className="text-sm font-semibold tabular-nums">{formatPlaybackTime(safePosition, includeHours)}</span>
 						</div>
 
 						<Slider
@@ -72,19 +86,19 @@ export function PlaybackProgressDialog({ open, title, progress, defaultDuration,
 							onValueChange={(value) => {
 								const nextPosition = typeof value === "number" ? value : (value[0] ?? 0);
 								setPosition(nextPosition);
-								setPositionInput(formatTime(nextPosition));
+								setPositionInput(formatPlaybackTime(nextPosition, includeHours));
 							}}
 						/>
 
 						<div className="text-muted-foreground flex justify-between text-xs">
-							<span>00:00:00</span>
-							<span>{formatTime(safeDuration)}</span>
+							<span>{formatPlaybackTime(0, includeHours)}</span>
+							<span>{formatPlaybackTime(safeDuration, includeHours)}</span>
 						</div>
 					</label>
 
 					<div className="flex flex-col gap-2">
 						<label htmlFor="playback-time" className="text-sm font-medium">
-							Exact time (HH:MM:SS)
+							Exact time ({timeFormat})
 						</label>
 						<Input
 							id="playback-time"
@@ -92,7 +106,7 @@ export function PlaybackProgressDialog({ open, title, progress, defaultDuration,
 							onChange={(event) => {
 								const value = event.target.value;
 								setPositionInput(value);
-								const seconds = parseTime(value);
+								const seconds = parseTime(value, includeHours);
 								if (Number.isSafeInteger(seconds) && seconds <= safeDuration) setPosition(seconds);
 							}}
 							aria-invalid={!isValidInput}
@@ -100,14 +114,14 @@ export function PlaybackProgressDialog({ open, title, progress, defaultDuration,
 						/>
 						{!isValidInput && (
 							<p id="playback-time-error" role="alert" className="text-destructive text-xs">
-								Enter a time in HH:MM:SS format between 00:00:00 and {formatTime(safeDuration)}.
+								Enter a time in {timeFormat} format between {formatPlaybackTime(0, includeHours)} and {formatPlaybackTime(safeDuration, includeHours)}.
 							</p>
 						)}
 					</div>
 
 					<div className="bg-muted/50 flex items-center justify-between rounded-lg p-3">
-						<span className="text-muted-foreground text-sm">Total runtime</span>
-						<span className="text-sm font-medium tabular-nums">{formatTime(safeDuration)}</span>
+						<span className="text-muted-foreground text-sm">Remaining</span>
+						<span className="text-sm font-medium tabular-nums">{formatPlaybackTime(safeDuration - safePosition, includeHours)}</span>
 					</div>
 				</div>
 

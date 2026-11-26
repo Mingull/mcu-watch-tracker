@@ -1,5 +1,15 @@
 import type { Entry, SeasonEntry } from "../data/timeline";
 
+export function parseDuration(value?: string) {
+	if (!value || value === "TBA") return 0;
+
+	const hours = Number(value.match(/(\d+)\s*h/i)?.[1] ?? 0);
+	const minutes = Number(value.match(/(\d+)\s*m/i)?.[1] ?? 0);
+	const seconds = Number(value.match(/(\d+)\s*s/i)?.[1] ?? 0);
+
+	return hours * 3600 + minutes * 60 + seconds;
+}
+
 export function formatTime(seconds: number) {
 	const hours = Math.floor(seconds / 3600);
 	const minutes = Math.floor((seconds % 3600) / 60);
