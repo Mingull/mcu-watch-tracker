@@ -8,16 +8,15 @@ import {
 	SidebarGroupLabel,
 	SidebarHeader,
 	SidebarMenu,
-	SidebarMenuBadge,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	Sidebar as SidebarPrimitive,
 	SidebarRail,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { Activity, Bookmark, ChevronsUpDown, Clock3, ListChecks, Plus, Settings } from "lucide-react";
+import { Activity, ChevronsUpDown, Clock3, Settings } from "lucide-react";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuShortcut, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Progress } from "./ui/progress";
 
 type SidebarProps = {
@@ -39,7 +38,7 @@ export function Sidebar({ tabs, activeTab, onTabChange, entryCount, counts, setS
 	}
 
 	return (
-		<SidebarPrimitive collapsible="icon">
+		<SidebarPrimitive variant="inset">
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
@@ -52,7 +51,7 @@ export function Sidebar({ tabs, activeTab, onTabChange, entryCount, counts, setS
 										</div>
 										<div className="grid flex-1 text-left text-sm leading-tight">
 											<span className="truncate font-medium">{activeTab.name}</span>
-											<span className="truncate text-xs">{activeTab.plan}</span>
+											{/* <span className="truncate text-xs">{activeTab.plan}</span> */}
 										</div>
 										<ChevronsUpDown className="ml-auto" />
 									</SidebarMenuButton>
@@ -64,45 +63,47 @@ export function Sidebar({ tabs, activeTab, onTabChange, entryCount, counts, setS
 								side={isMobile ? "bottom" : "right"}
 								sideOffset={4}
 							>
-								<DropdownMenuLabel className="text-muted-foreground text-xs">Teams</DropdownMenuLabel>
-								{tabs.map((team, index) => (
-									<DropdownMenuItem key={team.name} onClick={() => handleTabChange(team.id)} className="gap-2 p-2">
-										<div className="flex size-6 items-center justify-center rounded-md border">
-											<team.logo className="size-3.5 shrink-0" />
-										</div>
-										{team.name}
-										<DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-									</DropdownMenuItem>
-								))}
-								<DropdownMenuSeparator />
+								<DropdownMenuGroup>
+									<DropdownMenuLabel className="text-muted-foreground text-xs">WORKSPACE</DropdownMenuLabel>
+									{tabs.map((team, index) => (
+										<DropdownMenuItem key={team.name} onClick={() => handleTabChange(team.id)} className="gap-2 p-2">
+											<div className="flex size-6 items-center justify-center rounded-md border">
+												<team.logo className="size-3.5 shrink-0" />
+											</div>
+											{team.name}
+											<DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+										</DropdownMenuItem>
+									))}
+								</DropdownMenuGroup>
+								{/* <DropdownMenuSeparator />
 								<DropdownMenuItem className="gap-2 p-2">
 									<div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
 										<Plus className="size-4" />
 									</div>
 									<div className="text-muted-foreground font-medium">Add team</div>
-								</DropdownMenuItem>
+								</DropdownMenuItem> */}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</SidebarMenuItem>
 				</SidebarMenu>
-				<SidebarGroup>
+				{/* <SidebarGroup>
 					<SidebarGroupLabel>WORKSPACE</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarMenuItem>
-								<SidebarMenuButton isActive={activeTab.id === "timeline"} onClick={() => handleTabChange("timeline")}>
+								<SidebarMenuButton isActive={activeTab.id === "timeline"} onClick={() => handleTabChange("timeline")} tooltip="Timeline">
 									<ListChecks /> <span>Timeline</span>
 								</SidebarMenuButton>
 								<SidebarMenuBadge>{entryCount}</SidebarMenuBadge>
 							</SidebarMenuItem>
 							<SidebarMenuItem>
-								<SidebarMenuButton isActive={activeTab.id === "continue"} onClick={() => handleTabChange("continue")}>
+								<SidebarMenuButton isActive={activeTab.id === "continue"} onClick={() => handleTabChange("continue")} tooltip="Continue watching">
 									<Bookmark /> <span>Continue watching</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						</SidebarMenu>
 					</SidebarGroupContent>
-				</SidebarGroup>
+				</SidebarGroup> */}
 			</SidebarHeader>
 			<SidebarContent className="gap-4 p-2">
 				<SidebarGroup>
@@ -144,10 +145,10 @@ export function Sidebar({ tabs, activeTab, onTabChange, entryCount, counts, setS
 			</SidebarContent>
 			<SidebarFooter>
 				<SidebarGroup>
-					<p className="text-muted-foreground text-center text-[11px] leading-relaxed text-balance">
-						Progress is saved on this device in your browser. Use Export in the footer to back it up.
-					</p>
 					<SidebarMenu>
+						<p className="text-muted-foreground text-center text-[11px] leading-relaxed text-balance">
+							Progress is saved on this device in your browser. Use Export in the footer to back it up.
+						</p>
 						<DropdownMenu>
 							<DropdownMenuTrigger
 								render={
